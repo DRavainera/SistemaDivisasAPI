@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SistemaDivisasAPI", "SistemaDivisasAPI\SistemaDivisasAPI.csproj", "{19D98C02-B2E8-4CA3-8360-D6055BAAD136}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PruebaUnitaria", "PruebaUnitaria\PruebaUnitaria.csproj", "{CC3B8678-69EB-45A5-B7CB-935FBEF8F73F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19D98C02-B2E8-4CA3-8360-D6055BAAD136}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19D98C02-B2E8-4CA3-8360-D6055BAAD136}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19D98C02-B2E8-4CA3-8360-D6055BAAD136}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19D98C02-B2E8-4CA3-8360-D6055BAAD136}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC3B8678-69EB-45A5-B7CB-935FBEF8F73F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC3B8678-69EB-45A5-B7CB-935FBEF8F73F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC3B8678-69EB-45A5-B7CB-935FBEF8F73F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC3B8678-69EB-45A5-B7CB-935FBEF8F73F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {480BBD01-5A34-4249-B421-DB8120B6613C}
+	EndGlobalSection
+EndGlobal
