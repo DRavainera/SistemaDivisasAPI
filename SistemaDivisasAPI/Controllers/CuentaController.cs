@@ -1,8 +1,10 @@
 ﻿using MediatR;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SistemaDivisasAPI.Data;
+using SistemaDivisasAPI.DTO;
 using SistemaDivisasAPI.Mediator;
+using SistemaDivisasAPI.Models;
 
 
 namespace SistemaDivisasAPI.Controllers
@@ -13,26 +15,32 @@ namespace SistemaDivisasAPI.Controllers
     public class CuentaController : ControllerBase
     {
         protected readonly IMediator _mediator;
+        protected readonly IMapper _mapper;
 
-        public CuentaController(IMediator mediator)
+        public CuentaController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
         [HttpGet]
         [Route("CuentaPeso/Listar")]
-        public async Task<IActionResult> ListarCuentasPeso([FromBody] ListarCuentaPesoQuery clienteId)
+        public async Task<IActionResult> ListarCuentasPeso([FromBody] ListarCuentasPesoDTO cliente)
         {
-            if (clienteId.ClienteId is 0)
+            var cuentaPesoMapper = _mapper.Map<ListarCuentaPesoQuery>(cliente);
+
+            if (cuentaPesoMapper.ClienteId is 0)
             {
                 return BadRequest();
             }
 
-            var listaCuentasPeso = await _mediator.Send(new ListarCuentaPesoQuery() { ClienteId = clienteId.ClienteId});
+            var listaCuentasPeso = await _mediator.Send(new ListarCuentaPesoQuery() { ClienteId = cuentaPesoMapper.ClienteId});
 
-            if (listaCuentasPeso.Count > 0)
+            var listaCuentasPesoResponse = _mapper.Map<List<ListarCuentasPesoResponseDTO>>(listaCuentasPeso);
+
+            if (listaCuentasPesoResponse.Count > 0)
             {
-                return Ok(listaCuentasPeso);
+                return Ok(listaCuentasPesoResponse);
             }
             else
             {
@@ -42,33 +50,39 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpGet]
         [Route("CuentaPeso/Ver")]
-        public async Task<IActionResult> VerCuentaPeso([FromBody] VerCuentaPesoQuery cuentaId)
+        public async Task<IActionResult> VerCuentaPeso([FromBody] VerCuentaPesoDTO cuentaPeso)
     {
-            if (cuentaId.CuentaId is 0)
+            var cuentaPesoMapper = _mapper.Map<VerCuentaPesoQuery>(cuentaPeso);
+
+            if (cuentaPesoMapper.CuentaId is 0)
             {
                 return BadRequest();
             }
 
-            var cuentaPeso = await _mediator.Send(new VerCuentaPesoQuery() { CuentaId = cuentaId.CuentaId});
+            var verCuentaPeso = await _mediator.Send(new VerCuentaPesoQuery() { CuentaId = cuentaPesoMapper.CuentaId});
 
-            if (cuentaPeso == null)
+            var verCuentaPesoResponse = _mapper.Map<VerCuentaPesoResponseDTO>(verCuentaPeso);
+
+            if (verCuentaPesoResponse == null)
             {
                 return NotFound();
             }
 
-            return Ok(cuentaPeso);
+            return Ok(verCuentaPesoResponse);
         }
 
         [HttpPost]
         [Route("CuentaPeso/Crear")]
-        public async Task<IActionResult> CrearCuentaPeso([FromBody] CrearCuentaPesoQuery cuentaPeso)
+        public async Task<IActionResult> CrearCuentaPeso([FromBody] CrearCuentaPesoDTO cuentaPeso)
         {
-            if (cuentaPeso == null)
+            var cuentaPesoMapper = _mapper.Map<CrearCuentaPesoQuery>(cuentaPeso);
+
+            if (cuentaPesoMapper == null)
             {
                 return BadRequest();
             }
 
-            var respuesta = await _mediator.Send(cuentaPeso);
+            var respuesta = await _mediator.Send(cuentaPesoMapper);
 
             if (respuesta)
             {
@@ -80,14 +94,16 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpPut]
         [Route("CuentaPeso/Actualizar")]
-        public async Task<IActionResult> ActualizarCuentaPeso([FromBody] ActualizarCuentaPesoQuery cuentaPeso)
+        public async Task<IActionResult> ActualizarCuentaPeso([FromBody] ActualizarCuentaPesoDTO cuentaPeso)
         {
-            if (cuentaPeso == null)
+            var cuentaPesoMapper = _mapper.Map<ActualizarCuentaPesoQuery>(cuentaPeso);
+
+            if (cuentaPesoMapper == null)
             {
                 return BadRequest();
             }
 
-            var respuesta = await _mediator.Send(cuentaPeso);
+            var respuesta = await _mediator.Send(cuentaPesoMapper);
 
             if (respuesta)
             {
@@ -99,14 +115,16 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpDelete]
         [Route("CuentaPeso/Borrar")]
-        public async Task<IActionResult> BorrarCuentaPeso([FromBody] BorrarCuentaPesoQuery cuentaPeso)
+        public async Task<IActionResult> BorrarCuentaPeso([FromBody] BorrarCuentaPesoDTO cuentaPeso)
         {
-            if (cuentaPeso == null)
+            var cuentaPesoMapper = _mapper.Map<BorrarCuentaPesoQuery>(cuentaPeso);
+
+            if (cuentaPesoMapper == null)
             {
                 return BadRequest();
             }
 
-            var respuesta = await _mediator.Send(cuentaPeso);
+            var respuesta = await _mediator.Send(cuentaPesoMapper);
 
             if (respuesta)
             {
@@ -118,18 +136,22 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpGet]
         [Route("CuentaDolar/Listar")]
-        public async Task<IActionResult> ListarCuentasDolar([FromBody] ListarCuentaDolarQuery clienteId)
+        public async Task<IActionResult> ListarCuentasDolar([FromBody] ListarCuentasDolarDTO cliente)
         {
-            if (clienteId.ClienteId is 0)
+            var cuentaDolarMapper = _mapper.Map<ListarCuentaDolarQuery>(cliente);
+
+            if (cuentaDolarMapper.ClienteId is 0)
             {
                 return BadRequest();
             }
 
-            var listaCuentasDolar = await _mediator.Send(new ListarCuentaDolarQuery() { ClienteId = clienteId.ClienteId });
+            var listaCuentasDolar = await _mediator.Send(new ListarCuentaDolarQuery() { ClienteId = cuentaDolarMapper.ClienteId });
 
-            if (listaCuentasDolar.Count > 0)
+            var listaCuentasDolarResponse = _mapper.Map<List<ListarCuentasDolarResponseDTO>>(listaCuentasDolar);
+
+            if (listaCuentasDolarResponse.Count > 0)
             {
-                return Ok(listaCuentasDolar);
+                return Ok(listaCuentasDolarResponse);
             }
             else
             {
@@ -139,33 +161,39 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpGet]
         [Route("CuentaDolar/Ver")]
-        public async Task<IActionResult> VerCuentaDolar([FromBody] VerCuentaDolarQuery cuentaId)
+        public async Task<IActionResult> VerCuentaDolar([FromBody] VerCuentaDolarDTO cuentaDolar)
         {
-            if (cuentaId.CuentaId is 0)
+            var cuentaDolarMapper = _mapper.Map<VerCuentaDolarQuery>(cuentaDolar);
+
+            if (cuentaDolarMapper.CuentaId is 0)
             {
                 return BadRequest();
             }
 
-            var cuentaDolar = await _mediator.Send(new VerCuentaDolarQuery() { CuentaId = cuentaId.CuentaId });
+            var verCuentaDolar = await _mediator.Send(new VerCuentaDolarQuery() { CuentaId = cuentaDolarMapper.CuentaId });
 
-            if (cuentaDolar == null)
+            var verCuentaDolarResponse = _mapper.Map<VerCuentaDolarResponseDTO>(verCuentaDolar);
+
+            if (verCuentaDolarResponse == null)
             {
                 return NotFound();
             }
 
-            return Ok(cuentaDolar);
+            return Ok(verCuentaDolarResponse);
         }
 
         [HttpPost]
         [Route("CuentaDolar/Crear")]
-        public async Task<IActionResult> CrearCuentaDolar([FromBody] CrearCuentaDolarQuery cuentaDolar)
+        public async Task<IActionResult> CrearCuentaDolar([FromBody] CrearCuentaDolarDTO cuentaDolar)
         {
-            if (cuentaDolar == null)
+            var cuentaDolarMapper = _mapper.Map<CrearCuentaDolarQuery>(cuentaDolar);
+
+            if (cuentaDolarMapper == null)
             {
                 return BadRequest();
             }
 
-            var respuesta = await _mediator.Send(cuentaDolar);
+            var respuesta = await _mediator.Send(cuentaDolarMapper);
 
             if (respuesta)
             {
@@ -177,14 +205,16 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpPut]
         [Route("CuentaDolar/Actualizar")]
-        public async Task<IActionResult> ActualizarCuentaDolar([FromBody] ActualizarCuentaDolarQuery cuentaDolar)
+        public async Task<IActionResult> ActualizarCuentaDolar([FromBody] ActualizarCuentaDolarDTO cuentaDolar)
         {
-            if (cuentaDolar == null)
+            var cuentaDolarMapper = _mapper.Map<ActualizarCuentaDolarQuery>(cuentaDolar);
+
+            if (cuentaDolarMapper == null)
             {
                 return BadRequest();
             }
 
-            var respuesta = await _mediator.Send(cuentaDolar);
+            var respuesta = await _mediator.Send(cuentaDolarMapper);
 
             if (respuesta)
             {
@@ -196,14 +226,16 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpDelete]
         [Route("CuentaDolar/Borrar")]
-        public async Task<IActionResult> BorrarCuentaDolar([FromBody] BorrarCuentaDolarQuery cuentaDolar)
+        public async Task<IActionResult> BorrarCuentaDolar([FromBody] BorrarCuentaDolarDTO cuentaDolar)
         {
-            if (cuentaDolar == null)
+            var cuentaDolarMapper = _mapper.Map<BorrarCuentaDolarQuery>(cuentaDolar);
+
+            if (cuentaDolarMapper == null)
             {
                 return BadRequest();
             }
 
-            var respuesta = await _mediator.Send(cuentaDolar);
+            var respuesta = await _mediator.Send(cuentaDolarMapper);
 
             if (respuesta)
             {
@@ -215,18 +247,22 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpGet]
         [Route("CuentaCripto/Listar")]
-        public async Task<IActionResult> ListarCuentasCripto([FromBody] ListarCuentaCriptoQuery clienteId)
+        public async Task<IActionResult> ListarCuentasCripto([FromBody] ListarCuentasCriptoDTO cliente)
         {
-            if (clienteId.ClienteId is 0)
+            var cuentaCriptoMapper = _mapper.Map<ListarCuentaCriptoQuery>(cliente);
+
+            if (cuentaCriptoMapper.ClienteId is 0)
             {
                 return BadRequest();
             }
 
-            var listaCuentasCripto = await _mediator.Send(new ListarCuentaCriptoQuery() { ClienteId = clienteId.ClienteId });
+            var listaCuentasCripto = await _mediator.Send(new ListarCuentaCriptoQuery() { ClienteId = cuentaCriptoMapper.ClienteId });
 
-            if (listaCuentasCripto.Count > 0)
+            var listaCuentasCriptoResponse = _mapper.Map<List<ListarCuentasCriptoResponseDTO>>(listaCuentasCripto);
+
+            if (listaCuentasCriptoResponse.Count > 0)
             {
-                return Ok(listaCuentasCripto);
+                return Ok(listaCuentasCriptoResponse);
             }
             else
             {
@@ -236,33 +272,39 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpGet]
         [Route("CuentaCripto/Ver")]
-        public async Task<IActionResult> VerCuentaCripto([FromBody] VerCuentaCriptoQuery cuentaId)
+        public async Task<IActionResult> VerCuentaCripto([FromBody] VerCuentaCriptoDTO cuentaCripto)
         {
-            if (cuentaId.CuentaId is 0)
+            var cuentaCriptoMapper = _mapper.Map<VerCuentaCriptoQuery>(cuentaCripto);
+
+            if (cuentaCriptoMapper.CuentaId is 0)
             {
                 return BadRequest();
             }
 
-            var cuentaCripto = await _mediator.Send(new VerCuentaCriptoQuery() { CuentaId = cuentaId.CuentaId });
+            var verCuentaCripto = await _mediator.Send(new VerCuentaCriptoQuery() { CuentaId = cuentaCriptoMapper.CuentaId });
 
-            if (cuentaCripto == null)
+            var verCuentaCriptoResponse = _mapper.Map<VerCuentaCriptoResponseDTO>(verCuentaCripto);
+
+            if (verCuentaCriptoResponse == null)
             {
                 return NotFound();
             }
 
-            return Ok(cuentaCripto);
+            return Ok(verCuentaCriptoResponse);
         }
 
         [HttpPost]
         [Route("CuentaCripto/Crear")]
-        public async Task<IActionResult> CrearCuentaCripto([FromBody] CrearCuentaCriptoQuery cuentaCripto)
+        public async Task<IActionResult> CrearCuentaCripto([FromBody] CrearCuentaCriptoDTO cuentaCripto)
         {
-            if (cuentaCripto == null)
+            var cuentaCriptoMapper = _mapper.Map<CrearCuentaPesoQuery>(cuentaCripto);
+
+            if (cuentaCriptoMapper == null)
             {
                 return BadRequest();
             }
 
-            var respuesta = await _mediator.Send(cuentaCripto);
+            var respuesta = await _mediator.Send(cuentaCriptoMapper);
 
             if (respuesta)
             {
@@ -274,14 +316,16 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpPut]
         [Route("CuentaCripto/Actualizar")]
-        public async Task<IActionResult> ActualizarCuentaCripto([FromBody] ActualizarCuentaCriptoQuery cuentaCripto)
+        public async Task<IActionResult> ActualizarCuentaCripto([FromBody] ActualizarCuentaCriptoDTO cuentaCripto)
         {
-            if (cuentaCripto == null)
+            var cuentaCriptoMapper = _mapper.Map<ActualizarCuentaCriptoQuery>(cuentaCripto);
+
+            if (cuentaCriptoMapper == null)
             {
                 return BadRequest();
             }
 
-            var respuesta = await _mediator.Send(cuentaCripto);
+            var respuesta = await _mediator.Send(cuentaCriptoMapper);
 
             if (respuesta)
             {
@@ -293,14 +337,16 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpDelete]
         [Route("CuentaCripto/Borrar")]
-        public async Task<IActionResult> BorrarCuentaCripto([FromBody] BorrarCuentaCriptoQuery cuentaCripto)
+        public async Task<IActionResult> BorrarCuentaCripto([FromBody] BorrarCuentaCriptoDTO cuentaCripto)
         {
-            if (cuentaCripto == null)
+            var cuentaCriptoMapper = _mapper.Map<BorrarCuentaCriptoQuery>(cuentaCripto);
+
+            if (cuentaCriptoMapper == null)
             {
                 return BadRequest();
             }
 
-            var respuesta = await _mediator.Send(cuentaCripto);
+            var respuesta = await _mediator.Send(cuentaCriptoMapper);
 
             if (respuesta)
             {
@@ -312,17 +358,19 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpPut]
         [Route("CuentaPeso/Deposito")]
-        public async Task<IActionResult> DepositoCuentaPeso([FromBody] DepositoPesoQuery depositoPeso)
+        public async Task<IActionResult> DepositoCuentaPeso([FromBody] DepositoPesoDTO depositoPeso)
         {
-            if (depositoPeso == null)
+            var depositoPesoMapper = _mapper.Map<DepositoPesoQuery>(depositoPeso);
+
+            if (depositoPesoMapper == null)
             {
                 return BadRequest();
             }
 
             var respuesta = await _mediator.Send(new DepositoPesoQuery()
             {
-                IdCuenta = depositoPeso.IdCuenta,
-                Saldo = depositoPeso.Saldo
+                IdCuenta = depositoPesoMapper.IdCuenta,
+                Saldo = depositoPesoMapper.Saldo
             });
 
             if (respuesta)
@@ -337,17 +385,19 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpPut]
         [Route("CuentaPeso/Extraccion")]
-        public async Task<IActionResult> ExtraccionCuentaPeso([FromBody] ExtraccionPesoQuery extraccionPeso)
+        public async Task<IActionResult> ExtraccionCuentaPeso([FromBody] ExtraccionPesoDTO extraccionPeso)
         {
-            if (extraccionPeso == null)
+            var extraccionPesoMapper = _mapper.Map<ExtraccionPesoQuery>(extraccionPeso);
+
+            if (extraccionPesoMapper == null)
             {
                 return BadRequest();
             }
 
             var respuesta = await _mediator.Send(new ExtraccionPesoQuery()
             {
-                IdCuenta = extraccionPeso.IdCuenta,
-                Saldo = extraccionPeso.Saldo
+                IdCuenta = extraccionPesoMapper.IdCuenta,
+                Saldo = extraccionPesoMapper.Saldo
             });
 
             if (respuesta)
@@ -362,17 +412,19 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpPut]
         [Route("CuentaDolar/Deposito")]
-        public async Task<IActionResult> DepositoCuentaDolar([FromBody] DepositoDolarQuery depositoDolar)
+        public async Task<IActionResult> DepositoCuentaDolar([FromBody] DepositoDolarDTO depositoDolar)
         {
-            if (depositoDolar == null)
+            var depositoDolarMapper = _mapper.Map<DepositoDolarQuery>(depositoDolar);
+
+            if (depositoDolarMapper == null)
             {
                 return BadRequest();
             }
 
             var respuesta = await _mediator.Send(new DepositoDolarQuery()
             {
-                IdCuenta = depositoDolar.IdCuenta,
-                Saldo = depositoDolar.Saldo
+                IdCuenta = depositoDolarMapper.IdCuenta,
+                Saldo = depositoDolarMapper.Saldo
             });
 
             if (respuesta)
@@ -387,17 +439,19 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpPut]
         [Route("CuentaDolar/Extraccion")]
-        public async Task<IActionResult> ExtraccionCuentaDolar([FromBody] ExtraccionDolarQuery extraccionDolar)
+        public async Task<IActionResult> ExtraccionCuentaDolar([FromBody] ExtraccionDolarDTO extraccionDolar)
         {
-            if (extraccionDolar == null)
+            var extraccionDolarMapper = _mapper.Map<ExtraccionDolarQuery>(extraccionDolar);
+
+            if (extraccionDolarMapper == null)
             {
                 return BadRequest();
             }
 
             var respuesta = await _mediator.Send(new ExtraccionDolarQuery()
             {
-                IdCuenta = extraccionDolar.IdCuenta,
-                Saldo = extraccionDolar.Saldo
+                IdCuenta = extraccionDolarMapper.IdCuenta,
+                Saldo = extraccionDolarMapper.Saldo
             });
 
             if (respuesta)
@@ -412,17 +466,19 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpPut]
         [Route("CuentaCripto/Deposito")]
-        public async Task<IActionResult> DepositoCuentaCripto([FromBody] DepositoCriptoQuery depositoCripto)
+        public async Task<IActionResult> DepositoCuentaCripto([FromBody] DepositoCriptoDTO depositoCripto)
         {
-            if (depositoCripto == null)
+            var depositoCriptoMapper = _mapper.Map<DepositoCriptoQuery>(depositoCripto);
+
+            if (depositoCriptoMapper == null)
             {
                 return BadRequest();
             }
 
             var respuesta = await _mediator.Send(new DepositoCriptoQuery()
             {
-                IdCuenta = depositoCripto.IdCuenta,
-                Saldo = depositoCripto.Saldo
+                IdCuenta = depositoCriptoMapper.IdCuenta,
+                Saldo = depositoCriptoMapper.Saldo
             });
 
             if (respuesta)
@@ -437,17 +493,19 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpPut]
         [Route("CuentaCripto/Extraccion")]
-        public async Task<IActionResult> ExtraccionCuentaCripto([FromBody] ExtraccionCriptoQuery extraccionCripto)
+        public async Task<IActionResult> ExtraccionCuentaCripto([FromBody] ExtraccionCriptoDTO extraccionCripto)
         {
-            if (extraccionCripto == null)
+            var extraccionCriptoMapper = _mapper.Map<ExtraccionCriptoQuery>(extraccionCripto);
+
+            if (extraccionCriptoMapper == null)
             {
                 return BadRequest();
             }
 
             var respuesta = await _mediator.Send(new ExtraccionCriptoQuery()
             {
-                IdCuenta = extraccionCripto.IdCuenta,
-                Saldo = extraccionCripto.Saldo
+                IdCuenta = extraccionCriptoMapper.IdCuenta,
+                Saldo = extraccionCriptoMapper.Saldo
             });
 
             if (respuesta)
@@ -462,18 +520,20 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpPut]
         [Route("CuentaPeso/TransferirAPeso")]
-        public async Task<IActionResult> TransferirPesoPeso([FromBody] TransferPesoPesoQuery transferPesoPeso)
+        public async Task<IActionResult> TransferirPesoPeso([FromBody] TransferPesoPesoDTO transferPesoPeso)
         {
-            if (transferPesoPeso == null)
+            var transferPesoPesoMapper = _mapper.Map<TransferPesoPesoQuery>(transferPesoPeso);
+
+            if (transferPesoPesoMapper == null)
             {
                 return BadRequest();
             }
 
              var respuesta = await _mediator.Send(new TransferPesoPesoQuery()
             {
-                IdCuentaOrigen = transferPesoPeso.IdCuentaOrigen,
-                IdCuentaDestino = transferPesoPeso.IdCuentaDestino,
-                Saldo = transferPesoPeso.Saldo
+                IdCuentaOrigen = transferPesoPesoMapper.IdCuentaOrigen,
+                IdCuentaDestino = transferPesoPesoMapper.IdCuentaDestino,
+                Saldo = transferPesoPesoMapper.Saldo
              });
 
             if (respuesta)
@@ -488,18 +548,20 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpPut]
         [Route("CuentaDolar/TransferirADolar")]
-        public async Task<IActionResult> TransferirDolarDolar([FromBody] TransferDolarDolarQuery transferDolarDolar)
+        public async Task<IActionResult> TransferirDolarDolar([FromBody] TransferDolarDolarDTO transferDolarDolar)
         {
-            if (transferDolarDolar == null)
+            var transferDolarDolarMapper = _mapper.Map<TransferDolarDolarQuery>(transferDolarDolar);
+
+            if (transferDolarDolarMapper == null)
             {
                 return BadRequest();
             }
 
             var respuesta = await _mediator.Send(new TransferDolarDolarQuery()
             {
-                IdCuentaOrigen = transferDolarDolar.IdCuentaOrigen,
-                IdCuentaDestino = transferDolarDolar.IdCuentaDestino,
-                Saldo = transferDolarDolar.Saldo
+                IdCuentaOrigen = transferDolarDolarMapper.IdCuentaOrigen,
+                IdCuentaDestino = transferDolarDolarMapper.IdCuentaDestino,
+                Saldo = transferDolarDolarMapper.Saldo
             });
 
             if (respuesta)
@@ -514,18 +576,20 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpPut]
         [Route("CuentaCripto/TransferirACripto")]
-        public async Task<IActionResult> TransferirCriptoCripto([FromBody] TransferCriptoCriptoQuery transferCriptoCripto)
+        public async Task<IActionResult> TransferirCriptoCripto([FromBody] TransferCriptoCriptoDTO transferCriptoCripto)
         {
-            if (transferCriptoCripto == null)
+            var transferCriptoCriptoMapper = _mapper.Map<TransferCriptoCriptoQuery>(transferCriptoCripto);
+
+            if (transferCriptoCriptoMapper == null)
             {
                 return BadRequest();
             }
 
             var respuesta = await _mediator.Send(new TransferCriptoCriptoQuery()
             {
-                IdCuentaOrigen = transferCriptoCripto.IdCuentaOrigen,
-                IdCuentaDestino = transferCriptoCripto.IdCuentaDestino,
-                Saldo = transferCriptoCripto.Saldo
+                IdCuentaOrigen = transferCriptoCriptoMapper.IdCuentaOrigen,
+                IdCuentaDestino = transferCriptoCriptoMapper.IdCuentaDestino,
+                Saldo = transferCriptoCriptoMapper.Saldo
             });
 
             if (respuesta)
@@ -540,18 +604,20 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpPut]
         [Route("CuentaPeso/ComprarDolar")]
-        public async Task<IActionResult> ComprarDolar([FromBody] ComprarDolarQuery comprarDolar)
+        public async Task<IActionResult> ComprarDolar([FromBody] ComprarDolarDTO comprarDolar)
         {
-            if (comprarDolar == null)
+            var comprarDolarMapper = _mapper.Map<ComprarDolarQuery>(comprarDolar);
+
+            if (comprarDolarMapper == null)
             {
                 return BadRequest();
             }
 
             var respuesta = await _mediator.Send(new ComprarDolarQuery()
             {
-                CuentaPesoId = comprarDolar.CuentaPesoId,
-                CuentaDolarId = comprarDolar.CuentaDolarId,
-                Saldo = comprarDolar.Saldo
+                CuentaPesoId = comprarDolarMapper.CuentaPesoId,
+                CuentaDolarId = comprarDolarMapper.CuentaDolarId,
+                Saldo = comprarDolarMapper.Saldo
             });
 
             if (respuesta)
@@ -566,18 +632,20 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpPut]
         [Route("CuentaDolar/VenderDolar")]
-        public async Task<IActionResult> VenderDolar([FromBody] VenderDolarQuery venderDolar)
+        public async Task<IActionResult> VenderDolar([FromBody] VenderDolarDTO venderDolar)
         {
-            if (venderDolar == null)
+            var venderDolarMapper = _mapper.Map<VenderDolarQuery>(venderDolar);
+
+            if (venderDolarMapper == null)
             {
                 return BadRequest();
             }
 
             var respuesta = await _mediator.Send(new VenderDolarQuery()
             {
-                CuentaPesoId = venderDolar.CuentaPesoId,
-                CuentaDolarId = venderDolar.CuentaDolarId,
-                Saldo = venderDolar.Saldo
+                CuentaPesoId = venderDolarMapper.CuentaPesoId,
+                CuentaDolarId = venderDolarMapper.CuentaDolarId,
+                Saldo = venderDolarMapper.Saldo
             });
 
             if (respuesta)
@@ -591,18 +659,20 @@ namespace SistemaDivisasAPI.Controllers
         }
         [HttpPut]
         [Route("CuentaDolar/ComprarCripto")]
-        public async Task<IActionResult> ComprarCripto([FromBody] ComprarCriptoQuery comprarCripto)
+        public async Task<IActionResult> ComprarCripto([FromBody] ComprarCriptoDTO comprarCripto)
         {
-            if (comprarCripto == null)
+            var comprarCriptoMapper = _mapper.Map<ComprarCriptoQuery>(comprarCripto);
+
+            if (comprarCriptoMapper == null)
             {
                 return BadRequest();
             }
 
             var respuesta = await _mediator.Send(new ComprarCriptoQuery()
             {
-                CuentaCriptoId = comprarCripto.CuentaCriptoId,
-                CuentaDolarId = comprarCripto.CuentaDolarId,
-                Saldo = comprarCripto.Saldo
+                CuentaCriptoId = comprarCriptoMapper.CuentaCriptoId,
+                CuentaDolarId = comprarCriptoMapper.CuentaDolarId,
+                Saldo = comprarCriptoMapper.Saldo
             });
 
             if (respuesta)
@@ -619,16 +689,18 @@ namespace SistemaDivisasAPI.Controllers
         [Route("CuentaCripto/VenderCripto")]
         public async Task<IActionResult> VenderCripto([FromBody] VenderCriptoQuery venderCripto)
         {
-            if (venderCripto == null)
+            var venderCriptoMapper = _mapper.Map<VenderCriptoQuery>(venderCripto);
+
+            if (venderCriptoMapper == null)
             {
                 return BadRequest();
             }
 
             var respuesta = await _mediator.Send(new VenderCriptoQuery()
             {
-                CuentaCriptoId = venderCripto.CuentaCriptoId,
-                CuentaDolarId = venderCripto.CuentaDolarId,
-                Saldo = venderCripto.Saldo
+                CuentaCriptoId = venderCriptoMapper.CuentaCriptoId,
+                CuentaDolarId = venderCriptoMapper.CuentaDolarId,
+                Saldo = venderCriptoMapper.Saldo
             });
 
             if (respuesta)
@@ -643,18 +715,22 @@ namespace SistemaDivisasAPI.Controllers
 
         [HttpGet]
         [Route("Movimientos/Ver")]
-        public async Task<IActionResult> VerMovimientos([FromBody] VerMovimientosQuery numCuenta)
+        public async Task<IActionResult> VerMovimientos([FromBody] VerMovimientosQuery movimiento)
         {
-            if (numCuenta.NumCuenta is null)
+            var movimientoMapper = _mapper.Map<VerMovimientosQuery>(movimiento);
+
+            if (movimientoMapper.NumCuenta is null)
             {
                 return BadRequest();
             }
 
-            var listaMovimientos = await _mediator.Send(new VerMovimientosQuery() { NumCuenta = numCuenta.NumCuenta });
+            var listaMovimientos = await _mediator.Send(new VerMovimientosQuery() { NumCuenta = movimientoMapper.NumCuenta });
 
-            if (listaMovimientos.Count > 0)
+            var listaMovimientosResponse = _mapper.Map<List<VerMovimientosResponseDTO>>(listaMovimientos);
+
+            if (listaMovimientosResponse.Count > 0)
             {
-                return Ok(listaMovimientos);
+                return Ok(listaMovimientosResponse);
             }
             else
             {

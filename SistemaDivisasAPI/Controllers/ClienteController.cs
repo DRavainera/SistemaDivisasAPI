@@ -1,7 +1,10 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SistemaDivisasAPI.Data;
+using SistemaDivisasAPI.DTO;
 using SistemaDivisasAPI.Mediator;
+using SistemaDivisasAPI.Models;
 
 namespace SistemaDivisasAPI.Controllers
 {
@@ -10,29 +13,35 @@ namespace SistemaDivisasAPI.Controllers
     public class ClienteController : ControllerBase
     {
         protected readonly IMediator _mediator;
+        protected readonly IMapper _mapper;
 
-        public ClienteController(IMediator mediator)
+        public ClienteController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
         [HttpGet]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LoginQuery login)
+        public async Task<IActionResult> Login([FromBody] LoginDTO login)
         {
-            if (login == null)
+            var loginMapper = _mapper.Map<LoginQuery>(login);
+
+            if (loginMapper == null)
             {
                 return BadRequest();
             }
+            
+            var loginUsuario = await _mediator.Send(loginMapper);
 
-            var loginUsuario = await _mediator.Send(login);
+            var loginResponse = _mapper.Map<LoginResponseDTO>(loginUsuario);
 
-            if (loginUsuario == null)
+            if (loginResponse == null)
             {
                 return NotFound();
             }
 
-            return Ok(loginUsuario);
+            return Ok(loginResponse);
         }
     }
 }

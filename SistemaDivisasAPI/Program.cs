@@ -20,6 +20,7 @@ builder.Services.AddAuthorization(options =>
 });
 builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
