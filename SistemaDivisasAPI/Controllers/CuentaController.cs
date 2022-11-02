@@ -23,7 +23,7 @@ namespace SistemaDivisasAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpPut]
         [Route("CuentaPeso/Listar")]
         public async Task<IActionResult> ListarCuentasPeso([FromBody] ListarCuentasPesoDTO cliente)
         {
@@ -48,7 +48,7 @@ namespace SistemaDivisasAPI.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPut]
         [Route("CuentaPeso/Ver")]
         public async Task<IActionResult> VerCuentaPeso([FromBody] VerCuentaPesoDTO cuentaPeso)
     {
@@ -134,7 +134,7 @@ namespace SistemaDivisasAPI.Controllers
             return BadRequest();
         }
 
-        [HttpGet]
+        [HttpPut]
         [Route("CuentaDolar/Listar")]
         public async Task<IActionResult> ListarCuentasDolar([FromBody] ListarCuentasDolarDTO cliente)
         {
@@ -159,7 +159,7 @@ namespace SistemaDivisasAPI.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPut]
         [Route("CuentaDolar/Ver")]
         public async Task<IActionResult> VerCuentaDolar([FromBody] VerCuentaDolarDTO cuentaDolar)
         {
@@ -245,7 +245,7 @@ namespace SistemaDivisasAPI.Controllers
             return BadRequest();
         }
 
-        [HttpGet]
+        [HttpPut]
         [Route("CuentaCripto/Listar")]
         public async Task<IActionResult> ListarCuentasCripto([FromBody] ListarCuentasCriptoDTO cliente)
         {
@@ -270,7 +270,7 @@ namespace SistemaDivisasAPI.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPut]
         [Route("CuentaCripto/Ver")]
         public async Task<IActionResult> VerCuentaCripto([FromBody] VerCuentaCriptoDTO cuentaCripto)
         {
@@ -713,7 +713,7 @@ namespace SistemaDivisasAPI.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPut]
         [Route("Movimientos/Ver")]
         public async Task<IActionResult> VerMovimientos([FromBody] VerMovimientosQuery movimiento)
         {

@@ -21,7 +21,7 @@ namespace SistemaDivisasAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpPut]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO login)
         {
