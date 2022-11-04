@@ -21,18 +21,22 @@ namespace SistemaDivisasAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpPut]
+        [HttpGet]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDTO login)
+        public async Task<IActionResult> Login(string usuario, string contrasenia)
         {
-            var loginMapper = _mapper.Map<LoginQuery>(login);
+            var login = new LoginQuery()
+            {
+                Usuario = usuario,
+                Contrasenia = contrasenia
+            };
 
-            if (loginMapper == null)
+            if (login == null)
             {
                 return BadRequest();
             }
             
-            var loginUsuario = await _mediator.Send(loginMapper);
+            var loginUsuario = await _mediator.Send(login);
 
             var loginResponse = _mapper.Map<LoginResponseDTO>(loginUsuario);
 
