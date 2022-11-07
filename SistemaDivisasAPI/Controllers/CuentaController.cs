@@ -49,13 +49,13 @@ namespace SistemaDivisasAPI.Controllers
         [HttpGet]
         [Route("CuentaPeso/Ver")]
         public async Task<IActionResult> VerCuentaPeso(int cuentaId)
-    {
+        {
             if (cuentaId is 0)
             {
                 return BadRequest();
             }
 
-            var verCuentaPeso = await _mediator.Send(new VerCuentaPesoQuery() { CuentaId = cuentaId});
+            var verCuentaPeso = await _mediator.Send(new VerCuentaPesoQuery() { CuentaId = cuentaId });
 
             var verCuentaPesoResponse = _mapper.Map<VerCuentaPesoResponseDTO>(verCuentaPeso);
 
@@ -517,12 +517,12 @@ namespace SistemaDivisasAPI.Controllers
                 return BadRequest();
             }
 
-             var respuesta = await _mediator.Send(new TransferPesoPesoQuery()
+            var respuesta = await _mediator.Send(new TransferPesoPesoQuery()
             {
                 IdCuentaOrigen = transferPesoPesoMapper.IdCuentaOrigen,
                 IdCuentaDestino = transferPesoPesoMapper.IdCuentaDestino,
                 Saldo = transferPesoPesoMapper.Saldo
-             });
+            });
 
             if (respuesta)
             {
