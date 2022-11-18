@@ -30,13 +30,7 @@ namespace PruebaUnitaria
 
             var clienteController = new ClienteController(mediator, mapper);
 
-            LoginDTO loginUsuario = new LoginDTO()
-            {
-                Usuario = "CFulanito",
-                Contrasenia = "P455w0rD"
-            };
-
-            var response = clienteController.Login(loginUsuario);
+            var response = clienteController.Login("CFulanito", "P455w0rD");
 
             Assert.IsNotNull(response);
         }

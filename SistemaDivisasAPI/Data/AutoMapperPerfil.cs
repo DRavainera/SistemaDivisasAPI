@@ -46,6 +46,8 @@ namespace SistemaDivisasAPI.Data
             CreateMap<VenderCriptoDTO, VenderCriptoQuery>();
             CreateMap<VerMovimientosDTO, VerMovimientosQuery>();
             CreateMap<VerMovimientosQueryResponse, VerMovimientosResponseDTO>();
+            CreateMap<VerClienteDTO, VerClienteQuery>();
+            CreateMap<VerClienteQueryResponse, VerClienteResponseDTO>();
         }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SistemaDivisasAPI.Data;
 using SistemaDivisasAPI.DTO;
 using SistemaDivisasAPI.Mediator;
-using SistemaDivisasAPI.Models;
 
 namespace SistemaDivisasAPI.Controllers
 {
@@ -25,6 +24,7 @@ namespace SistemaDivisasAPI.Controllers
         [Route("login")]
         public async Task<IActionResult> Login(string usuario, string contrasenia)
         {
+
             var login = new LoginQuery()
             {
                 Usuario = usuario,
@@ -42,10 +42,38 @@ namespace SistemaDivisasAPI.Controllers
 
             if (loginResponse == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
 
             return Ok(loginResponse);
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("VerCliente")]
+        public async Task<IActionResult> VerCliente(string usuario, string contrasenia)
+        {
+            var cliente = new VerClienteQuery()
+            {
+                Usuario = usuario,
+                Contrasenia = contrasenia
+            };
+
+            if (cliente == null)
+            {
+                return BadRequest();
+            }
+
+            var verCliente = await _mediator.Send(cliente);
+
+            var verClienteResponse = _mapper.Map<VerClienteResponseDTO>(verCliente);
+
+            if (verClienteResponse == null)
+            {
+                return Unauthorized();
+            }
+
+            return Ok(verClienteResponse);
         }
     }
 }

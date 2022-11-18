@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SistemaDivisasAPI.DTO;
 using SistemaDivisasAPI.Mediator;
-using SistemaDivisasAPI.Models;
-
 
 namespace SistemaDivisasAPI.Controllers
 {

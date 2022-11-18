@@ -1,3 +1,5 @@
+using Hangfire;
+using Hangfire.SqlServer;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -13,6 +15,20 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddHangfire(config => config
+        .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+        .UseSimpleAssemblyNameTypeSerializer()
+        .UseRecommendedSerializerSettings()
+        .UseSqlServerStorage(ConfigurationManager.AppSetting["ConnectionStrings:MiConexion"], new SqlServerStorageOptions
+        {
+            CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+            SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+            QueuePollInterval= TimeSpan.Zero,
+            UseRecommendedIsolationLevel = true,
+            DisableGlobalLocks = true
+        }));
+
+builder.Services.AddHangfireServer();
 builder.Services.AddAuthorization(options =>
 {
     options.DefaultPolicy =
@@ -69,6 +85,7 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -82,6 +99,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseHangfireDashboard();
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
@@ -89,6 +108,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHangfireDashboard();
 
 app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
