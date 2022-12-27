@@ -1,8 +1,7 @@
 name: Compilar e implementar la aplicación de .NET Core en la aplicación web SistemaDivisasAPI20221226141319
 on:
   push:
-    branches:
-    - master
+    branches: [master]
 env:
   AZURE_WEBAPP_NAME: SistemaDivisasAPI20221226141319
   AZURE_WEBAPP_PACKAGE_PATH: SistemaDivisasAPI\publish
